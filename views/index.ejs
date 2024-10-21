@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="text-white">
+
+    <!-- Layout com menus laterais -->
+    <div class="flex min-h-screen">
+
+        <!-- Sidebar Esquerda -->
+        <aside class="w-64 bg-gray-900 border-r border-gray-700 p-5 fixed h-full">
+            <div class="flex items-center mb-5">
+                <img class="h-24 w-24 rounded-full border-4 border-gray-800"
+                    src="<%= user.profile_picture ? '/uploads/' + user.profile_picture : 'https://img.icons8.com/ios-filled/50/FFFFFF/butterfly.png' %>"
+                    alt="User avatar">
+                <div class="ml-4">
+                    <h1 class="text-xl font-semibold"><%= user.username %></h1>
+                    <p class="text-gray-400">@<%= user.username %></p>
+                </div>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Menu</h2>
+            <nav class="space-y-4">
+                <a href="/" class="flex items-center text-gray-400 hover:bg-gray-800 p-2 rounded">Feed</a>
+                <a href="/notifications" class="flex items-center text-gray-400 hover:bg-gray-800 p-2 rounded">Alertas</a>
+                <a href="/search" class="flex items-center text-gray-400 hover:bg-gray-800 p-2 rounded">Descobrir</a>
+                <a href="/chat" class="flex items-center text-gray-400 hover:bg-gray-800 p-2 rounded">Mensagens</a>
+                <a href="/profile" class="flex items-center text-gray-400 hover:bg-gray-800 p-2 rounded">Meu Perfil</a>
+                <button id="openModal" class="flex items-center text-gray-400 hover:bg-gray-800 p-2 rounded">Criar Post</button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 ml-64 p-6 bg-gray-900">
+            <header class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-white">Descubra</h1>
+                <input type="text" placeholder="Pesquisar..."
+                    class="p-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </header>
+
+            <section class="space-y-6 flex flex-col items-start  max-w-2xl w-full">
+                <% posts.forEach(post => { %>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full">
+                    <div class="flex items-center mb-4">
+                        <img class="h-12 w-12 rounded-full mr-3"
+                            src="<%= post.post_profile_picture ? '/uploads/' + post.post_profile_picture : 'https://img.icons8.com/ios-filled/50/FFFFFF/butterfly.png' %>"
+                            alt="User avatar">
+                        <div>
+                            <h2 class="text-lg font-semibold text-white"><%= post.post_username || 'Anônimo' %></h2>
+                            <p class="text-xs text-gray-400">Postado por: <%= post.post_username || 'Anônimo' %></p>
+                            <p class="text-xs text-gray-400"><%= new Date(post.created_at).toLocaleString() %> ago</p>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-300 mb-2"><%= post.title %></h3>
+                    <p class="text-gray-300 mb-3 text-lg"><%= post.content %></p>
+                    <% if (post.image) { %>
+                    <img src="/uploads/<%= post.image %>" alt="Post image" class="mt-2 rounded-lg shadow-md w-full h-auto">
+                    <% } %>
+            
+                    <div class="flex justify-between items-center mt-4">
+                        <button class="text-blue-400 like-button hover:text-blue-500 transition duration-200" data-id="<%= post.id %>">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span class="like-count ml-1"><%= post.likes %></span>
+                        </button>
+                        <button class="text-blue-400 retweet-button hover:text-blue-500 transition duration-200" data-id="<%= post.id %>">
+                            <i class="fas fa-retweet"></i>
+                            <span class="retweet-count ml-1"><%= post.retweets %></span>
+                        </button>
+                        <button class="text-blue-400 share-button hover:text-blue-500 transition duration-200" data-id="<%= post.id %>">
+                            <i class="fas fa-share"></i>
+                            Compartilhar
+                        </button>
+                    </div>
+                    
+                    <!-- Tooltip de Curtidas -->
+                    <div class="tooltip hidden bg-gray-700 text-white text-sm p-2 rounded-lg absolute" style="z-index: 10;">
+                        <span id="like-users-<%= post.id %>"></span>
+                    </div>
+            
+                    <!-- Seção de Comentários -->
+                    <div class="mt-4">
+                        <h3 class="text-lg font-semibold text-gray-400 mb-2">Comentários</h3>
+                        <% if (post.comments && post.comments.length > 0) { %>
+                        <% post.comments.forEach(comment => { %>
+                        <div class="flex items-start mb-4">
+                            <img class="h-8 w-8 rounded-full mr-2"
+                                src="<%= comment.profile_picture ? '/uploads/' + comment.profile_picture : 'https://img.icons8.com/ios-filled/50/FFFFFF/butterfly.png' %>"
+                                alt="User avatar">
+                            <div class="bg-gray-700 p-3 rounded-lg w-full shadow-md">
+                                <p class="text-sm text-white"><strong>@<%= comment.username %></strong>: <%= comment.content %></p>
+                            </div>
+                        </div>
+                        <% }); %>
+                        <% } else { %>
+                        <p class="text-sm text-gray-400">Nenhum comentário ainda.</p>
+                        <% } %>
+            
+                        <!-- Formulário de Comentário -->
+                        <form action="/posts/<%= post.id %>/comments" method="POST" class="mt-4">
+                            <input type="text" name="content" placeholder="Adicione um comentário..." required
+                                class="p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full mb-2">
+                            <button type="submit"
+                                class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition duration-200">Comentar</button>
+                        </form>
+                    </div>
+                </div>
+                <% }); %>
+            </section>
+            
+        </main>
+
+        <!-- Sidebar Direita -->
+        <aside class="w-64 bg-gray-900 border-l border-gray-700 p-5 fixed right-0 h-full">
+            <h2 class="text-xl font-semibold mb-4">Atalhos</h2>
+            <nav class="space-y-4">
+                <a href="/settings" class="flex items-center text-gray-400 hover:bg-gray-800 p-2 rounded">Configurações</a>
+                <a href="/help" class="flex items-center text-gray-400 hover:bg-gray-800 p-2 rounded">Ajuda</a>
+                <a href="/about" class="flex items-center text-gray-400 hover:bg-gray-800 p-2 rounded">Sobre</a>
+                <a href="/logout" class="flex items-center text-gray-400 hover:bg-gray-800 p-2 rounded">Sair</a>
+            </nav>
+        </aside>
+    </div>
+
+    <!-- Modal para Postar -->
+    <div id="postModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+        <div class="bg-gray-800 rounded-lg p-5">
+            <h2 class="text-xl font-semibold mb-4">Novo Post</h2>
+            <form id="postForm" method="POST" action="/posts" enctype="multipart/form-data">
+                <input type="text" id="postTitle" name="title" placeholder="Título do post" required
+                    class="p-2 bg-gray-700 text-white rounded-lg border border-gray-600 w-full mb-2">
+                <textarea id="postContent" name="content" rows="4" placeholder="O que está acontecendo?" required
+                    class="p-2 bg-gray-700 text-white rounded-lg border border-gray-600 w-full mb-2"></textarea>
+                <input type="file" id="postImage" name="image" class="bg-gray-700 text-white rounded-lg border border-gray-600 w-full mb-2">
+                <button type="submit"
+                    class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition duration-200">Publicar</button>
+                <button type="button" id="closeModal"
+                    class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition duration-200">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Abre o modal
+        document.getElementById('openModal').onclick = function () {
+            document.getElementById('postModal').classList.remove('hidden');
+        };
+
+        // Fecha o modal
+        document.getElementById('closeModal').onclick = function () {
+            document.getElementById('postModal').classList.add('hidden');
+        };
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - <%= user.username %></title>
+    <link rel="stylesheet" href="/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Estilos para o Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Estilo do emblema com brilho pulsante */
+        .pulsating-emblem {
+            animation: pulsate 1.5s infinite;
+        }
+
+        @keyframes pulsate {
+            0% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+                filter: brightness(1.5);
+            }
+
+            100% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-white">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar Esquerda -->
+        <aside class="w-64 bg-gray-800 border-r border-gray-700 p-5">
+            <div class="flex items-center mb-5">
+                <img class="h-24 w-24 rounded-full border-4 border-gray-800"
+                    src="<%= user.profile_picture ? '/uploads/' + user.profile_picture : 'https://img.icons8.com/ios-filled/50/FFFFFF/butterfly.png' %>"
+                    alt="User avatar">
+
+                <div class="ml-3">
+                    <h2 class="text-lg font-semibold">
+                        <%= user.username %>
+                    </h2>
+                    <p class="text-gray-400">@<%= user.username %></p>
+                </div>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Menu</h2>
+            <nav class="space-y-4">
+                <a href="/" class="flex items-center text-gray-400 hover:bg-gray-700 p-2 rounded">Home</a>
+                <a href="/profile" class="flex items-center text-blue-400 hover:bg-gray-700 p-2 rounded">Perfil</a>
+                <a href="/notifications" class="flex items-center text-gray-400 hover:bg-gray-700 p-2 rounded">Notificações</a>
+                <a href="/search" class="flex items-center text-gray-400 hover:bg-gray-700 p-2 rounded">Busca</a>
+                <a href="/chat" class="flex items-center text-gray-400 hover:bg-gray-700 p-2 rounded">Chat</a>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="flex-1 p-6 bg-gray-900">
+            <div class="relative mb-6">
+                <img src="<%= user.banner_image ? '/uploads/' + user.banner_image : 'https://example.com/default-banner.jpg' %>"
+                    alt="Banner" class="w-full h-32 object-cover rounded-lg shadow-md">
+                <div class="absolute top-20 left-5">
+                    <img class="h-24 w-24 rounded-full border-4 border-gray-800 shadow-lg"
+                        src="<%= user.profile_picture ? '/uploads/' + user.profile_picture : 'https://img.icons8.com/ios-filled/50/FFFFFF/butterfly.png' %>"
+                        alt="User avatar">
+                </div>
+            </div>
+
+            <header class="flex justify-between items-center mb-6 mt-16">
+                <div>
+                    <h1 class="text-2xl font-bold text-white">
+                        <%= user.username %>
+                    </h1>
+                    <p class="text-gray-400">@<%= user.username %></p>
+                    <% if (hasEmblem) { %>
+                        <img src="/images/emblemaanti.png" alt="Emblema de Registro"
+                            class="inline-block w-6 h-6 ml-2 pulsating-emblem">
+                    <% } %>
+                </div>
+                <button id="openModal"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">Editar Imagens</button>
+            </header>
+
+            <div class="flex mb-4">
+                <div class="mr-4 text-center">
+                    <h2 class="text-lg font-semibold text-white">0</h2>
+                    <p class="text-gray-400">seguidores</p>
+                </div>
+                <div class="mr-4 text-center">
+                    <h2 class="text-lg font-semibold text-white">1</h2>
+                    <p class="text-gray-400">seguindo</p>
+                </div>
+                <div class="text-center">
+                    <h2 class="text-lg font-semibold text-white">
+                        <%= posts.length %>
+                    </h2>
+                    <p class="text-gray-400">posts</p>
+                </div>
+            </div>
+
+            <section class="space-y-6">
+                <h2 class="text-xl font-semibold text-white mb-4">Posts</h2>
+
+                <% if (posts.length > 0) { %>
+                    <% posts.forEach(post => { %>
+                        <div
+                            class="bg-gray-800 p-6 rounded-lg shadow-md transition-transform transform hover:scale-105 w-full max-w-2xl mx-auto">
+                            <div class="flex items-start mb-4">
+                                <img class="h-12 w-12 rounded-full border-2 border-gray-700"
+                                    src="<%= user.profile_picture ? '/uploads/' + user.profile_picture : 'https://img.icons8.com/ios-filled/50/FFFFFF/butterfly.png' %>"
+                                    alt="User avatar">
+                                <div class="ml-4">
+                                    <h3 class="text-gray-300 font-semibold">
+                                        <%= user.username %>
+                                    </h3>
+                                    <p class="text-gray-500 text-sm">@<%= user.username %></p>
+                                    <p class="text-gray-500 text-xs">
+                                        <%= post.created_at ? new Date(post.created_at).toLocaleString() : 'Data não disponível' %>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <% if (post.image) { %>
+                                <img src="/uploads/<%= post.image %>" alt="Imagem do post"
+                                    class="w-full h-auto mb-2 rounded-lg">
+                            <% } %>
+                            <p class="text-gray-300 mb-2">
+                                <%= post.content %>
+                            </p>
+
+                            <div class="flex justify-between mt-2">
+                                <button
+                                    class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">Curtir</button>
+                                <span class="text-gray-400 text-sm">
+                                    <%= post.likes ? post.likes : 0 %> Curtidas
+                                </span>
+                            </div>
+
+                            <!-- Seção de Comentários -->
+                            <div class="mt-4">
+                                <h3 class="text-lg font-semibold text-gray-400 mb-2">Comentários</h3>
+                                <% if (post.comments && post.comments.length > 0) { %>
+                                    <% post.comments.forEach(comment => { %>
+                                        <div class="flex items-start mb-4">
+                                            <img class="h-8 w-8 rounded-full mr-2"
+                                                src="<%= comment.profile_picture ? '/uploads/' + comment.profile_picture : 'https://img.icons8.com/ios-filled/50/FFFFFF/butterfly.png' %>"
+                                                alt="User avatar">
+
+                                            <div class="bg-gray-800 p-3 rounded-lg w-full">
+                                                <p class="text-sm text-white"><strong>@<%= comment.username %></strong>: <%= comment.content %></p>
+                                            </div>
+                                        </div>
+                                    <% }); %>
+                                <% } else { %>
+                                    <p class="text-sm text-gray-400">Nenhum comentário ainda.</p>
+                                <% } %>
+
+                                <!-- Formulário de Comentário -->
+                                <form action="/posts/<%= post.id %>/comments" method="POST" class="mt-2 flex">
+                                    <input type="text" name="comment" class="flex-1 border border-gray-700 bg-gray-800 text-white px-3 py-2 rounded-l"
+                                        placeholder="Adicionar um comentário...">
+                                    <button type="submit"
+                                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r">Comentar</button>
+                                </form>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p class="text-gray-400">Nenhum post ainda.</p>
+                <% } %>
+            </section>
+        </main>
+
+        <!-- Sidebar Direita -->
+        <aside class="w-64 bg-gray-800 border-l border-gray-700 p-5">
+            <h2 class="text-xl font-semibold mb-4">Sugestões</h2>
+            <ul class="space-y-2">
+                <li class="bg-gray-700 p-4 rounded-lg">Usuário 1</li>
+                <li class="bg-gray-700 p-4 rounded-lg">Usuário 2</li>
+                <li class="bg-gray-700 p-4 rounded-lg">Usuário 3</li>
+            </ul>
+        </aside>
+    </div>
+
+    <!-- Modal para editar imagens -->
+    <div id="modal" class="modal flex">
+        <div class="modal-content bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-lg">
+            <span class="close text-gray-400 hover:text-white cursor-pointer">&times;</span>
+            <h2 class="text-xl font-semibold text-white">Editar Imagens</h2>
+            <form action="/profile/edit-images" method="POST" enctype="multipart/form-data" class="mt-4">
+                <label for="profile_picture" class="block mb-2 text-gray-300">Foto de Perfil:</label>
+                <input type="file" name="profile_picture" id="profile_picture" 
+                       class="mb-4 p-2 border border-blue-600 rounded-lg w-full bg-blue-900 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" 
+                       accept="image/*">
+    
+                <label for="banner_image" class="block mb-2 text-gray-300">Banner:</label>
+                <input type="file" name="banner_image" id="banner_image" 
+                       class="mb-4 p-2 border border-blue-600 rounded-lg w-full bg-blue-900 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" 
+                       accept="image/*">
+    
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Salvar</button>
+            </form>
+        </div>
+    </div>
+    
+
+    <script>
+        // Script para abrir e fechar o modal
+        const modal = document.getElementById("modal");
+        const openModal = document.getElementById("openModal");
+        const closeModal = document.getElementsByClassName("close")[0];
+
+        openModal.onclick = function () {
+            modal.style.display = "flex";
+        }
+
+        closeModal.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+
+</html>

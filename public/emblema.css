@@ -1,0 +1,41 @@
+  /* Estilos do modal */
+  .modal {
+    display: none; /* Escondido por padrão */
+    position: fixed; /* Fica na tela */
+    z-index: 1; /* Fica na frente */
+    left: 0;
+    top: 0;
+    width: 100%; /* Largura total */
+    height: 100%; /* Altura total */
+    overflow: auto; /* Habilita scroll se necessário */
+    background-color: rgba(0, 0, 0, 0.7); /* Cor com opacidade */
+}
+
+.modal-content {
+    background-color: #1f2937; /* Fundo do modal */
+    margin: 15% auto; /* Margens em relação ao topo */
+    padding: 20px;
+    border: 1px solid #4b5563; /* Cor da borda */
+    width: 80%; /* Largura do modal */
+    text-align: center;
+    color: #fff; /* Cor do texto */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+img {
+    max-width: 100px; /* Limita a largura da imagem */
+    margin-top: 10px; /* Espaço acima da imagem */
+}

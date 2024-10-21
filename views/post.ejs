@@ -1,0 +1,52 @@
+<!-- views/post.ejs -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title><%= post.title %></title>
+    <link rel="stylesheet" href="/style.css"> <!-- Seu CSS -->
+</head>
+<body>
+    <h1><%= post.title %></h1>
+    <p><%= post.content %></p>
+    <% if (post.image) { %>
+        <img src="/uploads/<%= post.image %>" alt="Imagem do post">
+    <% } %>
+
+    <h2>Comentários</h2>
+    <ul>
+        <% comments.forEach(comment => { %>
+            <li>
+                <strong><%= comment.user_id %>:</strong>const { Model, DataTypes } = require('sequelize');
+                const sequelize = require('../config/database'); // ajuste o caminho se necessário
+                
+                class Post extends Model {}
+                
+                Post.init({
+                    content: {
+                        type: DataTypes.TEXT,
+                        allowNull: false,
+                    },
+                    userId: {
+                        type: DataTypes.INTEGER,
+                        allowNull: false,
+                    },
+                    // outros atributos conforme necessário
+                }, {
+                    sequelize,
+                    modelName: 'Post',
+                });
+                
+                module.exports = Post;
+                
+                <p><%= comment.content %></p>
+            </li>
+        <% }); %>
+    </ul>
+
+    <form action="/posts/<%= post.id %>/comments" method="POST">
+        <textarea name="content" placeholder="Adicione um comentário..."></textarea>
+        <button type="submit">Comentar</button>
+    </form>
+</body>
+</html>

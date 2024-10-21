@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <title>Xmania Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-900 text-white flex flex-col justify-between min-h-screen">
+
+    <div class="flex-grow flex items-center justify-center">
+        <div class="bg-gray-800 shadow-md rounded-lg flex max-w-4xl w-full overflow-hidden">
+            <!-- Left side: Description -->
+            <div class="w-1/2 bg-gray-700 p-8">
+                <h2 class="text-4xl font-bold text-pink-400 mb-4">xmania</h2>
+                <p class="text-gray-300 text-lg mb-6">Xmania é desenvolvido por um fã do antigo jogo Minimundos conhecido como <b>Marcos Guerra</b> com o intuito de trazer nostalgia e diversão.</p>
+                <p class="text-gray-300 text-lg mb-6">Este projeto busca reviver a experiência clássica de jogos online que muitos amaram.</p>
+                <p class="text-gray-300 text-lg">Junte-se para compartilhar momentos, histórias e redescobrir uma paixão em um espaço feito por fãs, para fãs.</p>
+            </div>
+
+            <!-- Right side: Login Form -->
+            <div class="w-1/2 p-8 bg-gray-800">
+                <h3 class="text-2xl font-bold mb-6 text-white">Entre com sua <span class="text-blue-400">conta Xmania</span></h3>
+                <form action="/login" method="POST">
+                    <% if (message.length > 0) { %>
+                        <div class="bg-red-600 p-2 mb-4 rounded text-white">
+                            <p><%= message %></p>
+                        </div>
+                    <% } %>
+                    <div class="mb-4">
+                        <label class="block text-gray-400 font-semibold mb-2" for="username">Username:</label>
+                        <input type="text" id="username" name="username" placeholder="Seu nome de usuário" required class="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded-lg">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-400 font-semibold mb-2" for="password">Password:</label>
+                        <input type="password" id="password" name="password" placeholder="Sua senha" required class="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded-lg">
+                    </div>
+                    <div class="mb-4">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="remember" class="form-checkbox text-blue-400 bg-gray-700 border-gray-600">
+                            <span class="ml-2 text-gray-400">Lembrar de mim neste computador</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-lg font-semibold hover:bg-blue-500 transition duration-200">Entrar</button>
+                    <p class="mt-4 text-center text-gray-400">Ainda não tem uma conta? <a href="/register" class="text-blue-400 hover:underline">Crie uma aqui!</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 p-6">
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center">
+            <!-- Left side: Developer info -->
+            <div class="text-center md:text-left">
+                <p class="text-gray-400 text-sm">Desenvolvido por 
+                    <a href="https://www.instagram.com/euboniii/" target="_blank" class="text-pink-400 hover:underline font-semibold">
+                        @MarcosGuerra
+                    </a>
+                </p>
+                <p class="text-gray-400 text-sm mt-1 md:mt-0">Xmania é um projeto independente e não tem envolvimento com Minimundos.</p>
+            </div>
+
+            <!-- Right side: Social Icons -->
+            <div class="flex mt-4 md:mt-0 space-x-6">
+                <a href="https://www.instagram.com/infomaniabr/" target="_blank" class="text-gray-400 hover:text-pink-400">
+                    <i class="fab fa-instagram text-2xl"></i>
+                </a>
+                <a href="" target="_blank" class="text-gray-400 hover:text-blue-400">
+                    <i class="fab fa-twitter text-2xl"></i>
+                </a>
+                <a href="" target="_blank" class="text-gray-400 hover:text-red-600">
+                    <i class="fab fa-youtube text-2xl"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
